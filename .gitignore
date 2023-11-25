@@ -1,0 +1,5 @@
+.DS_Store
+*.pyc
+/.DS_Store
+/molgraph/__pycache__
+/dataset/bbbp
