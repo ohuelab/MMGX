@@ -122,5 +122,6 @@ python3 main.py \
 ```
 
 ## Citation 📃
-
-> A. Kengkanna and M. Ohue, "[Enhancing Model Learning and Interpretation using Multiple Molecular Graph Representations for Compound Property and Activity Prediction](10.1109/CIBCB56990.2023.10264879)" 2023 IEEE Conference on Computational Intelligence in Bioinformatics and Computational Biology (CIBCB), Eindhoven, Netherlands, 2023, pp. 1-8, doi: 10.1109/CIBCB56990.2023.10264879.
+> - Kengkanna A, Ohue M. **Enhancing property and activity prediction and interpretation using multiple molecular graph representations with MMGX**. *Communications Chemistry*. (in press)
+> - Kengkanna A, Ohue M. **Enhancing Model Learning and Interpretation Using Multiple Molecular Graph Representations for Compound Property and Activity Prediction**.
+In *Proceedings of The 20th IEEE International Conference on Computational Intelligence in Bioinformatics and Computational Biology (CIBCB 2023)*, 8 pages, 2023. [doi: 10.1109/CIBCB56990.2023.10264879](https://doi.org/10.1109/CIBCB56990.2023.10264879)
