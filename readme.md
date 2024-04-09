@@ -122,6 +122,4 @@ python3 main.py \
 ```
 
 ## Citation 📃
-> - Kengkanna A, Ohue M. **Enhancing property and activity prediction and interpretation using multiple molecular graph representations with MMGX**. *Communications Chemistry*. (in press)
-> - Kengkanna A, Ohue M. **Enhancing Model Learning and Interpretation Using Multiple Molecular Graph Representations for Compound Property and Activity Prediction**.
-In *Proceedings of The 20th IEEE International Conference on Computational Intelligence in Bioinformatics and Computational Biology (CIBCB 2023)*, 8 pages, 2023. [doi: 10.1109/CIBCB56990.2023.10264879](https://doi.org/10.1109/CIBCB56990.2023.10264879)
+> - Kengkanna A, Ohue M. **Enhancing property and activity prediction and interpretation using multiple molecular graph representations with MMGX**. *Communications Chemistry*, 7: 74, 2024. [doi: 10.1038/s42004-024-01155-w](https://doi.org/10.1038/s42004-024-01155-w)
