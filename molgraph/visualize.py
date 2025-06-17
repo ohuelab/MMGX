@@ -10,8 +10,8 @@ import math
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
-import umap
-import umap.plot
+# import umap
+# import umap.plot
 # rdkit
 from rdkit.Chem import Draw
 
@@ -143,8 +143,8 @@ def visaulize_tsne(x_embed, y_test, title=None, path=None, legend=None):
     lgd = ax.legend(handles, legend, loc='right', bbox_to_anchor=(1.43, 0.72))
     fig.savefig(path+'/'+title+'_tsne.png', dpi=150, bbox_extra_artists=(lgd,), bbox_inches='tight') 
 
-# UMAP
-def visualize_umap(x_embed, y_test, title=None, path=None):
-    print(title+" - UMAP projection")
-    mapper = umap.UMAP(n_neighbors=15).fit(x_embed)
-    umap.plot.points(mapper, labels=y_test)
+# # UMAP
+# def visualize_umap(x_embed, y_test, title=None, path=None):
+#     print(title+" - UMAP projection")
+#     mapper = umap.UMAP(n_neighbors=15).fit(x_embed)
+#     umap.plot.points(mapper, labels=y_test)

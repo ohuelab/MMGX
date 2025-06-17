@@ -106,6 +106,7 @@ class Tester(object):
                 plt.xlabel('true')
                 plt.ylabel('predict')
                 plt.show()
+                plt.savefig(f'./dataset/{self.log_folder_name}/results/experiment-{self.exp_name}_fold-{self.fold_number}_seed-{self.seed}_scatter.png')
 
                 y_test_list = [yt[0] for yt in y_test]
                 y_pred_list = [yt[0] for yt in y_pred]
@@ -208,6 +209,7 @@ class Tester(object):
                 plt.ylabel('True Positive Rate (TPR)')
                 plt.xlabel('False Positive Rate (FPR)')
                 plt.show()
+                plt.savefig(f'./dataset/{self.log_folder_name}/results/experiment-{self.exp_name}_fold-{self.fold_number}_seed-{self.seed}_roc.png')
 
                 self.x_embed = x_embed
                 self.y_test = y_test
