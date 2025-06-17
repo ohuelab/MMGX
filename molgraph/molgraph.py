@@ -1070,7 +1070,7 @@ class PharmacophoreGraph(MoleculeGraph):
                 cliques.append(ring_8[num_ring_8])
                 cliques_prop.append(list(atom.GetPropsAsDict()['_ErGAtomTypes']))
                 num_ring_8 += 1 
-            elif atom.GetAtomMapNum() == 0 and atom.GetSymbol() == '*':
+            elif atom.GetAtomMapNum() == 0 and atom.GetSymbol() == '*' and atom.IsInRing():
                 cliques.append(ring_B8[num_ring_B8])
                 cliques_prop.append(list(atom.GetPropsAsDict()['_ErGAtomTypes']))
                 num_ring_B8 += 1
