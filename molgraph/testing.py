@@ -455,6 +455,47 @@ class Tester(object):
         self.model_test.eval()
 
         with torch.no_grad():
+            if self.args.graphtask == 'regression':
+                ids = list()
+                y_test = list()
+                y_pred = list()
+                x_embed = list()
+
+                loss_fn = F.mse_loss
+                # loss_fn = nn.L1Loss(reduction='sum')
+                
+                # rmse = 0
+                loss = 0
+
+                for data in test_loader:
+                    data = data.to(self.device)
+                    if return_attention_weights:
+                        out, att_mol = self.model_test(data, return_attention_weights=return_attention_weights)
+                        out = out.to(self.device)
+                    else:
+                        out = self.model_test(data).to(self.device)
+                    # rmse += mean_squared_error(out, data.y.cpu()).item()
+                    # loss += loss_fn(out, data.y, reduction='sum').item()
+                    # loss += loss_fn(out, data.y).item()
+                    # y_test.extend((data.y.cpu()).detach().numpy())
+                    y_pred.extend((out.cpu()).detach().numpy())
+                    ids.extend(data.ids)
+                    # x_embed.extend(self.model_test.last_mol_embedding.detach().cpu().numpy())
+
+                if print_result:
+                    # print('y_test:', y_test)
+                    print('y_pred:', y_pred)
+
+                y_test = torch.Tensor(np.array(y_test, dtype=float)).type(torch.DoubleTensor)
+                self.x_embed = x_embed
+                self.y_test = y_test
+
+                # interpretation
+                if return_attention_weights:
+                    self.att_mol = att_mol
+
+                return pd.DataFrame(data={'Id': ids, 'pred': y_pred})
+            
             if self.args.graphtask == 'multiclass':
                 y_test = list()
                 y_pred = list()
