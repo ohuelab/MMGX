@@ -13,7 +13,8 @@ This code was tested in Python 3.8 with PyTorch 1.13 and rdkit 2023.3.2
 - Then, activate the environment
 `conda activate mmgx`
 - Some packages may not be installed successfully, please kindly install again.
-```import torch
+```
+import torch
 !pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html
 !pip install torch-sparse -f https://data.pyg.org/whl/torch-{torch.__version__}.html
 ```
