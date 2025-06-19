@@ -9,9 +9,14 @@ Enhancing Model Learning and Interpretation Using Multiple Molecular Graph Repre
 
 This code was tested in Python 3.8 with PyTorch 1.13 and rdkit 2023.3.2
 - Using [Conda](https://www.anaconda.com/):
-`conda create -f mmgx.yaml`
+`conda env create -f mmgx.yml`
 - Then, activate the environment
 `conda activate mmgx`
+- Some packages may not be installed successfully, please kindly install again.
+```import torch
+!pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html
+!pip install torch-sparse -f https://data.pyg.org/whl/torch-{torch.__version__}.html
+```
 
 ### 2. Prepare dataset
 
