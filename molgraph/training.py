@@ -14,7 +14,7 @@ from tqdm.notebook import tqdm
 from tqdm import tqdm, trange
 # sklearn
 import sklearn.metrics as metrics
-from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import cohen_kappa_score
 # pytorch
@@ -49,6 +49,8 @@ class Trainer(object):
             overall_results = {
                 'val_rmse': [],
                 'test_rmse': [],
+                'test_mae': [],
+                'test_mse': [],
                 'test_r2': []
             }
 
@@ -91,6 +93,8 @@ class Trainer(object):
                     for _, data in enumerate(train_loader):
 
                         data = data.to(self.device)
+                        # if data include only one, skip
+                        if getNumberofSmiles(data) == 1: continue
                         out = self.model(data, fold_number=fold_number)
                         loss = loss_fn(out, data.y)
                         # Before the backward pass, use the optimizer object to zero all of the
@@ -112,7 +116,7 @@ class Trainer(object):
                     total_loss = total_loss / len(train_loader.dataset)
 
                     ### Validation
-                    val_rsme, val_loss, val_r2 = self.eval_regression(val_loader, loss_fn)
+                    val_rsme, val_loss, val_r2, val_mae, val_mse = self.eval_regression(val_loader, loss_fn)
                     
                     if val_loss < best_loss:
                         best_loss_rmse = val_rsme
@@ -149,22 +153,24 @@ class Trainer(object):
                                         f'fold-{fold_number}_seed-{self.seed}_best-model.pth')
                 self.model.load_state_dict(checkpoint)
                 
-                test_rmse, test_loss, test_r2 = self.eval_regression(test_loader, loss_fn)
+                test_rmse, test_loss, test_r2, test_mae, test_mse = self.eval_regression(test_loader, loss_fn)
                 
                 logger.log(f"[Test: Fold {fold_number}] "
                            f"Best Loss> Loss: {best_loss:4f}, RMSE: {best_loss_rmse:4f}, at Epoch: {best_loss_epoch} /"
                            f"Best RMSE> Loss: {best_rmse_loss:4f}, RMSE: {best_rmse:4f}, at Epoch: {best_rmse_epoch} //"
-                           f"[Test: Fold {fold_number}] Test> RMSE: {test_rmse:4f}, R2: {test_r2:4f}, with Time: {t_end-t_start:.2f}")
+                           f"[Test: Fold {fold_number}] Test> RMSE: {test_rmse:4f}, R2: {test_r2:4f}, MAE: {test_mae:4f}, MSE: {test_mse:4f}, with Time: {t_end-t_start:.2f}")
 
                 test_result_file = "./dataset/{}/results/{}-results.txt".format(self.log_folder_name, self.exp_name)
                 with open(test_result_file, 'a+') as f:
                     f.write(f"[FOLD {fold_number}] {self.seed}: BEST Loss: {best_loss:.4f}, BEST RMSE: {best_rmse:.4f} //"
-                            f"Test> Loss: {test_loss:.4f}, RMSE: {test_rmse:.4f}, R2: {test_r2:4f}\n")
+                            f"Test> Loss: {test_loss:.4f}, RMSE: {test_rmse:.4f}, R2: {test_r2:4f}, MAE: {test_mae:4f}, MSE: {test_mse:4f}\n")
 
                 ### Report results
                 overall_results['val_rmse'].append(best_rmse)
                 overall_results['test_rmse'].append(test_rmse)
                 overall_results['test_r2'].append(test_r2)
+                overall_results['test_mae'].append(test_mae)
+                overall_results['test_mse'].append(test_mse)
 
                 final_result_file = f"./dataset/{self.log_folder_name}/results/{self.exp_name}-final.txt"
                 with open(final_result_file, 'a+') as f:
@@ -172,11 +178,18 @@ class Trainer(object):
                             f"ValRMSE_Std: {np.array(overall_results['val_rmse']).std():.4f}, " 
                             f"TestRMSE_Mean: {np.array(overall_results['test_rmse']).mean():.4f}, "
                             f"TestRMSE_Std: {np.array(overall_results['test_rmse']).std():.4f}, " 
+                            f"TestMAE_Mean: {np.array(overall_results['test_mae']).mean():.4f}, "
+                            f"TestMAE_Std: {np.array(overall_results['test_mae']).std():.4f}, "
+                            f"TestMSE_Mean: {np.array(overall_results['test_mse']).mean():.4f}, "
+                            f"TestMSE_Std: {np.array(overall_results['test_mse']).std():.4f}, "
                             f"TestR2_Mean: {np.array(overall_results['test_r2']).mean():.4f}, "
                             f"TestR2_Std: {np.array(overall_results['test_r2']).std():.4f}\n")
 
                 print('ValRMSE ', str(np.array(overall_results['val_rmse']).mean()), '+/-', str(np.array(overall_results['val_rmse']).std()))
                 print('TestRMSE', str(np.array(overall_results['test_rmse']).mean()), '+/-', str(np.array(overall_results['test_rmse']).std()))
+                print('TestMAE', str(np.array(overall_results['test_mae']).mean()), '+/-', str(np.array(overall_results['test_mae']).std()))
+                print('TestMSE', str(np.array(overall_results['test_mse']).mean()), '+/-', str(np.array(overall_results['test_mse']).std()))
+
 
         elif self.args.graphtask == 'classification':
 
@@ -227,6 +240,7 @@ class Trainer(object):
                     for _, data in enumerate(train_loader):
 
                         data = data.to(self.device)
+                        if getNumberofSmiles(data) == 1: continue
                         out = self.model(data, fold_number=fold_number)
                         loss = loss_fn(out, data.y)
                         # Before the backward pass, use the optimizer object to zero all of the
@@ -490,7 +504,9 @@ class Trainer(object):
             # print(rsme_final, '?==?', math.sqrt(mean_squared_error(y_test, y_pred)))
             # print(loss_final, '?==?', F.mse_loss(torch.Tensor(y_pred),torch.Tensor(y_test)).item())
             # print(r2_final)
-        return rsme_final, loss_final, r2_final
+            mae = mean_absolute_error(y_test.cpu(), y_pred.cpu())
+            mse = mean_squared_error(y_test.cpu(), y_pred.cpu())
+        return rsme_final, loss_final, r2_final, mae, mse
 
     ### Evaluate
     def eval_classification(self, loader, loss_fn):

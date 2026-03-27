@@ -17,7 +17,7 @@ from tqdm.notebook import tqdm
 from tqdm import tqdm, trange
 # sklearn
 import sklearn.metrics as metrics
-from sklearn.metrics import r2_score, mean_squared_error, accuracy_score
+from sklearn.metrics import r2_score, mean_squared_error, accuracy_score, mean_absolute_error
 from sklearn.metrics import classification_report
 from sklearn.metrics import cohen_kappa_score
 from sklearn.metrics import precision_recall_curve
@@ -103,6 +103,8 @@ class Tester(object):
                 min_value = np.floor(np.min(y_test+y_pred))
                 plt.plot([min_value, max_value], [min_value, max_value], 'r')
                 plt.scatter(y_test, y_pred, color="black", alpha=0.5, s=10)
+                # show metrics
+                plt.text(0.05, 0.95, f'RMSE: {math.sqrt(mean_squared_error(y_test, y_pred)):.4f}\nMSE: {mean_squared_error(y_test, y_pred):.4f}\nR2: {r2_score(y_test, y_pred):.4f}\nMAE: {mean_absolute_error(y_test, y_pred):.4f}', transform=plt.gca().transAxes, verticalalignment='top')
                 plt.xlabel('true')
                 plt.ylabel('predict')
                 plt.show()
@@ -131,6 +133,7 @@ class Tester(object):
                 self.y_test = y_test
 
                 self.performance_report = {"RMSE": math.sqrt(mean_squared_error(y_test, y_pred)),
+                                           "MAE": mean_absolute_error(y_test, y_pred),
                                             "MSE": mean_squared_error(y_test, y_pred),
                                             "R2": r2_score(y_test, y_pred)}
 
@@ -222,6 +225,8 @@ class Tester(object):
                 if return_attention_weights:
                     self.att_mol = att_mol
 
+                y_pred = y_pred.tolist()
+
             elif self.args.graphtask == 'multiclass':
                 y_test = list()
                 y_pred = list()
@@ -305,6 +310,10 @@ class Tester(object):
                 # interpretation
                 if return_attention_weights:
                     self.att_mol = att_mol
+
+                y_pred = y_pred.tolist()
+        
+        return y_pred
 
     def test_single(self, test_loader, return_attention_weights=False, print_result=True, raw_prediction=False):
         self.model_test.eval()
