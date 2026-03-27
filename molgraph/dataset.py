@@ -104,7 +104,7 @@ def getNonConflictDataset(datasets):
     return new_datasets
 
 # get validated dataset 
-def getDataset(file, smiles, task, splitting):
+def getDataset(file, smiles, task, splitting, skip_validation=False):
     # creating file folder
     if not(os.path.isdir('./dataset/{}'.format(file))):
         os.makedirs(os.path.join('./dataset/{}'.format(file)))
@@ -116,10 +116,14 @@ def getDataset(file, smiles, task, splitting):
     else:
         # retrieve data from file
         datasets = getDatasetFromFile(file, smiles, task, splitting)
-        # validate smiles
-        datasets = getValidDataset(datasets)
-        # remove conflict smiles (Same X diff y)
-        datasets = getNonConflictDataset(datasets)
+        if not skip_validation:
+            # validate smiles
+            datasets = getValidDataset(datasets)
+            # remove conflict smiles (Same X diff y)
+            datasets = getNonConflictDataset(datasets)
+        else:
+            # assign all smiles as valid without validation
+            datasets['v'] = 'valid'
         # write to files
         writeToCSV(datasets, path)  
 
