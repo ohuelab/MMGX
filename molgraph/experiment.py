@@ -50,7 +50,7 @@ class ArgumentParser:
         self.parser.add_argument('--lr', type=float, default=0.00005, help='learning rate')
         self.parser.add_argument('--weight_decay', type=float, default=0.00005, help='weight decay')
         self.parser.add_argument("--grad_norm", type=float, default=1.0)
-        self.parser.add_argument("--dropout", type=float, default=0.4)
+        self.parser.add_argument("--dropout", type=float, default=0.2)
         self.parser.add_argument('--num_epochs', default=300, type=int, help='train epochs number')
         self.parser.add_argument('--patience', type=int, default=30, help='patience for earlystopping')
         self.parser.add_argument("--lr_schedule", default=True, action='store_true')
