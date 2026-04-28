@@ -3,6 +3,10 @@ Enhancing Model Learning and Interpretation Using Multiple Molecular Graph Repre
 
 ![graphical abstract](https://github.com/ohuelab/mmgx/blob/main/blob/graphicalabstract.png?raw=true)
 
+## Update 🔔
+
+- 2026/03/23: MMGX Results on [TDC](https://tdcommons.ai/) dataset >> [GitHub](https://github.com/appaesk/MMGX-TDC)
+
 ## Usage 💻
 
 ### 1. Install environment
